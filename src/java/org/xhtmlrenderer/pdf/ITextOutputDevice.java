@@ -834,8 +834,17 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 
     private void drawPDFAsImage(PDFAsImage image, int x, int y) {
         URL url = image.getURL();
+        int pageNumber;
+        String urlRef = url.getRef();
+        if (urlRef != null) {
+            try {
+                pageNumber = Integer.parseInt(urlRef);
+            } catch (Exception e) {
+                throw new XRRuntimeException("Invalid page number: " + urlRef, e);
+            }
+        } else pageNumber = 1;
+       
         PdfReader reader = null;
-
         try {
             reader = getReader(url);
         } catch (IOException e) {
@@ -846,7 +855,7 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
                     e.getMessage(), e);
         }
 
-        PdfImportedPage page = getWriter().getImportedPage(reader, 1);
+        PdfImportedPage page = getWriter().getImportedPage(reader, pageNumber);
 
         AffineTransform at = AffineTransform.getTranslateInstance(x,y);
         at.translate(0, image.getHeightAsFloat());
