@@ -62,7 +62,9 @@ public class ITextUserAgent extends NaiveUserAgent {
         ImageResource resource = null;
         uri = resolveURI(uri);
         resource = (ImageResource) _imageCache.get(uri);
-        if (resource == null) {
+        if (resource != null) {
+            resource = new ImageResource(resource.getImageUri(), (FSImage)((ITextFSImage)resource.getImage()).clone());
+        } else {
             InputStream is = resolveAndOpenStream(uri);
             if (is != null) {
                 try {
@@ -79,8 +81,8 @@ public class ITextUserAgent extends NaiveUserAgent {
 	                    Image image = Image.getInstance(readStream(is));
 	                    scaleToOutputResolution(image);
 	                    resource = new ImageResource(uri, new ITextFSImage(image));
+	                    _imageCache.put(uri, resource);
                     }
-                    _imageCache.put(uri, resource);
                 } catch (Exception e) {
                     XRLog.exception("Can't read image file; unexpected problem for URI '" + uri + "'", e);
                 } finally {
@@ -93,12 +95,7 @@ public class ITextUserAgent extends NaiveUserAgent {
             }
         }
 
-        if (resource != null) {
-            resource = new ImageResource(resource.getImageUri(), (FSImage)((ITextFSImage)resource.getImage()).clone());
-        } else {
-            resource = new ImageResource(uri, null);
-        }
-
+        if (resource == null) resource = new ImageResource(uri, null);
         return resource;
     }
 
