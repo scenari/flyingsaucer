@@ -856,10 +856,16 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
         }
 
         PdfImportedPage page = getWriter().getImportedPage(reader, pageNumber);
-
+        int rotation = reader.getPageRotation(pageNumber);
+        
         AffineTransform at = AffineTransform.getTranslateInstance(x,y);
-        at.translate(0, image.getHeightAsFloat());
-        at.scale(image.getWidthAsFloat(), image.getHeightAsFloat());
+        at.rotate(rotation * Math.PI / 180);
+        if (rotation == 0) at.translate(0, image.getHeightAsFloat());
+        else if (rotation == 180) at.translate(-image.getWidthAsFloat(), 0);
+        else if (rotation == 270) at.translate(-image.getHeightAsFloat(), image.getWidthAsFloat());
+        
+        if (rotation == 0 || rotation == 180) at.scale(image.scaleWidth(), image.scaleHeight());
+        else at.scale(image.scaleHeight(), image.scaleWidth());
 
         AffineTransform inverse = normalizeMatrix(_transform);
         AffineTransform flipper = AffineTransform.getScaleInstance(1,-1);
@@ -868,9 +874,6 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 
         double[] mx = new double[6];
         inverse.getMatrix(mx);
-
-        mx[0] = image.scaleWidth();
-        mx[3] = image.scaleHeight();
 
         _currentPage.restoreState();
         _currentPage.addTemplate(page,
