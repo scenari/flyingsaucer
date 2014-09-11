@@ -19,15 +19,18 @@
  */
 package org.xhtmlrenderer.layout;
 
-import org.xhtmlrenderer.css.constants.IdentValue;
-
 import java.util.Iterator;
 import java.util.List;
 
+import org.xhtmlrenderer.css.constants.IdentValue;
+
 public class CounterFunction {
     private IdentValue _listStyleType;
+
     private int _counterValue;
+
     private List _counterValues;
+
     private String _separator;
 
     public CounterFunction(int counterValue, IdentValue listStyleType) {
@@ -49,7 +52,8 @@ public class CounterFunction {
         for (Iterator i = _counterValues.iterator(); i.hasNext();) {
             Integer value = (Integer) i.next();
             sb.append(createCounterText(_listStyleType, value.intValue()));
-            if (i.hasNext()) sb.append(_separator);
+            if (i.hasNext())
+                sb.append(_separator);
         }
         return sb.toString();
     }
@@ -72,20 +76,20 @@ public class CounterFunction {
         return text;
     }
 
-
     private static String toLatin(int val) {
         String result = "";
-        while (val > 0) {
+        val -= 1;
+        while (val >= 0) {
             int letter = val % 26;
-            val = val / 26;
-            result = ((char) (letter + 64)) + result;
+            val = val / 26 - 1;
+            result = ((char) (letter + 65)) + result;
         }
         return result;
     }
 
     private static String toRoman(int val) {
-        int[] ints = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-        String[] nums = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        int[] ints = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+        String[] nums = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < ints.length; i++) {
             int count = (int) (val / ints[i]);
