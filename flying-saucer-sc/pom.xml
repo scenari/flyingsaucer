@@ -13,7 +13,7 @@
 
   <packaging>jar</packaging>
 
-  <name>Flying Saucer PDF Rendering</name>
+  <name>Flying Saucer SCENARI jar</name>
   <description>Flying Saucer is a CSS 2.1 renderer written in Java.</description>
 
   <dependencies>
