@@ -6,9 +6,12 @@ frame, frameset,
 h1, h2, h3, h4,
 h5, h6, noframes,
 ol, p, ul, center,
-dir, hr, menu, pre, object   { display: block }
+dir, hr, menu, pre, object,
+section, nav, article, aside,
+header, footer, main,
+figure, figcaption   { display: block }
 li              { display: list-item }
-head, script    { display: none }
+head, script, template    { display: none }
 body            { margin: 8px }
 h1              { font-size: 2em; margin: .67em 0 }
 h2              { font-size: 1.5em; margin: .75em 0 }
@@ -43,6 +46,7 @@ ol              { list-style-type: decimal }
 ol ul, ul ol,
 ul ul, ol ol    { margin-top: 0; margin-bottom: 0 }
 u, ins          { text-decoration: underline }
+mark            { background-color: #FF0; color: #000; }
 br:before       { content: "\A"; white-space: pre-line; }
 /* :before, :after { white-space: pre-line } */
 center          { text-align: center }
