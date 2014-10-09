@@ -1,0 +1,41 @@
+<!-- ....................................................................... -->
+<!-- XHTML 1.1 DTD  ........................................................ -->
+<!-- file: xhtml11.dtd
+-->
+
+<!-- XHTML 1.1 DTD
+
+     This is XHTML, a reformulation of HTML as a modular XML application.
+
+     The Extensible HyperText Markup Language (XHTML)
+     Copyright 1998-2001 World Wide Web Consortium
+        (Massachusetts Institute of Technology, Institut National de
+         Recherche en Informatique et en Automatique, Keio University).
+         All Rights Reserved.
+
+     Permission to use, copy, modify and distribute the XHTML DTD and its 
+     accompanying documentation for any purpose and without fee is hereby 
+     granted in perpetuity, provided that the above copyright notice and 
+     this paragraph appear in all copies.  The copyright holders make no 
+     representation about the suitability of the DTD for any purpose.
+
+     It is provided "as is" without expressed or implied warranty.
+
+        Author:     Murray M. Altheim <altheim@eng.sun.com>
+        Revision:   $Id$
+
+-->
+<!-- This is the driver file for version 1.1 of the XHTML DTD.
+
+     Please use this formal public identifier to identify it:
+
+         "-//W3C//DTD XHTML 1.1//EN"
+-->
+
+<!-- Simplication spécifique à SCENARI : on inclut uniquement le module charent pour les entités--> 
+<!ENTITY % xhtml-charent.module "INCLUDE" >
+<![%xhtml-charent.module;[
+<!ENTITY % xhtml-charent.mod
+     PUBLIC "-//W3C//ENTITIES XHTML Character Entities 1.0//EN"
+            "xhtml-charent-1.mod" >
+%xhtml-charent.mod;]]>
