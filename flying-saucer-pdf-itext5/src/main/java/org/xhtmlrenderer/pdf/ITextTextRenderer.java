@@ -33,81 +33,80 @@ import org.xhtmlrenderer.render.JustificationInfo;
 import com.itextpdf.text.pdf.BaseFont;
 
 public class ITextTextRenderer implements TextRenderer {
-    private static float TEXT_MEASURING_DELTA = 0.01f;
-    
-    public void setup(FontContext context) {
-    }
+	private static float TEXT_MEASURING_DELTA = 0.01f;
 
-    public void drawString(OutputDevice outputDevice, String string, float x, float y) {
-        ((ITextOutputDevice)outputDevice).drawString(string, x, y, null);
-    }
-    
-    public void drawString(
-            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info) {
-        ((ITextOutputDevice)outputDevice).drawString(string, x, y, info);
-    }
+	public void setup(FontContext context) {
+	}
 
-    public FSFontMetrics getFSFontMetrics(FontContext context, FSFont font, String string) {
-        FontDescription descr = ((ITextFSFont)font).getFontDescription();
-        BaseFont bf = descr.getFont();
-        float size = font.getSize2D();
-        ITextFSFontMetrics result = new ITextFSFontMetrics();
-        result.setAscent(bf.getFontDescriptor(BaseFont.BBOXURY, size));
-        result.setDescent(-bf.getFontDescriptor(BaseFont.BBOXLLY, size));
-        
-        result.setStrikethroughOffset(-descr.getYStrikeoutPosition() / 1000f * size);
-        if (descr.getYStrikeoutSize() != 0) {
-            result.setStrikethroughThickness(descr.getYStrikeoutSize() / 1000f * size);
-        } else {
-            result.setStrikethroughThickness(size / 12.0f);
-        }
-        
-        result.setUnderlineOffset(-descr.getUnderlinePosition() / 1000f * size);
-        result.setUnderlineThickness(descr.getUnderlineThickness() / 1000f * size);
-        
-        return result;
-    }
+	public void drawString(OutputDevice outputDevice, String string, float x, float y) {
+		((ITextOutputDevice) outputDevice).drawString(string, x, y, null);
+	}
 
-    public int getWidth(FontContext context, FSFont font, String string) {
-        BaseFont bf = ((ITextFSFont)font).getFontDescription().getFont();
-        float result = bf.getWidthPoint(string, font.getSize2D());
-        if (result - Math.floor(result) < TEXT_MEASURING_DELTA) {
-            return (int)result;
-        } else {
-            return (int)Math.ceil(result); 
-        }
-    }
+	public void drawString(OutputDevice outputDevice, String string, float x, float y, JustificationInfo info) {
+		((ITextOutputDevice) outputDevice).drawString(string, x, y, info);
+	}
 
-    public void setFontScale(float scale) {
-    }
+	public FSFontMetrics getFSFontMetrics(FontContext context, FSFont font, String string) {
+		FontDescription descr = ((ITextFSFont) font).getFontDescription();
+		BaseFont bf = descr.getFont();
+		float size = font.getSize2D();
+		ITextFSFontMetrics result = new ITextFSFontMetrics();
+		result.setAscent(bf.getFontDescriptor(BaseFont.ASCENT, size));
+		result.setDescent(-bf.getFontDescriptor(BaseFont.DESCENT, size));
 
-    public float getFontScale() {
-        return 1.0f;
-    }
+		result.setStrikethroughOffset(-descr.getYStrikeoutPosition() / 1000f * size);
+		if (descr.getYStrikeoutSize() != 0) {
+			result.setStrikethroughThickness(descr.getYStrikeoutSize() / 1000f * size);
+		} else {
+			result.setStrikethroughThickness(size / 12.0f);
+		}
 
-    public void setSmoothingThreshold(float fontsize) {
-    }
+		result.setUnderlineOffset(-descr.getUnderlinePosition() / 1000f * size);
+		result.setUnderlineThickness(descr.getUnderlineThickness() / 1000f * size);
 
-    public int getSmoothingLevel() {
-        return 0;
-    }
+		return result;
+	}
 
-    public void setSmoothingLevel(int level) {
-    }
+	public int getWidth(FontContext context, FSFont font, String string) {
+		BaseFont bf = ((ITextFSFont) font).getFontDescription().getFont();
+		float result = bf.getWidthPoint(string, font.getSize2D());
+		if (result - Math.floor(result) < TEXT_MEASURING_DELTA) {
+			return (int) result;
+		} else {
+			return (int) Math.ceil(result);
+		}
+	}
 
-    public Rectangle getGlyphBounds(OutputDevice outputDevice, FSFont font, FSGlyphVector fsGlyphVector, int index, float x, float y) {
-        throw new UnsupportedOperationException();
-    }
+	public void setFontScale(float scale) {
+	}
 
-    public float[] getGlyphPositions(OutputDevice outputDevice, FSFont font, FSGlyphVector fsGlyphVector) {
-        throw new UnsupportedOperationException();
-    }
+	public float getFontScale() {
+		return 1.0f;
+	}
 
-    public FSGlyphVector getGlyphVector(OutputDevice outputDevice, FSFont font, String string) {
-        throw new UnsupportedOperationException();
-    }
+	public void setSmoothingThreshold(float fontsize) {
+	}
 
-    public void drawGlyphVector(OutputDevice outputDevice, FSGlyphVector vector, float x, float y) {
-        throw new UnsupportedOperationException();
-    }
+	public int getSmoothingLevel() {
+		return 0;
+	}
+
+	public void setSmoothingLevel(int level) {
+	}
+
+	public Rectangle getGlyphBounds(OutputDevice outputDevice, FSFont font, FSGlyphVector fsGlyphVector, int index, float x, float y) {
+		throw new UnsupportedOperationException();
+	}
+
+	public float[] getGlyphPositions(OutputDevice outputDevice, FSFont font, FSGlyphVector fsGlyphVector) {
+		throw new UnsupportedOperationException();
+	}
+
+	public FSGlyphVector getGlyphVector(OutputDevice outputDevice, FSFont font, String string) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void drawGlyphVector(OutputDevice outputDevice, FSGlyphVector vector, float x, float y) {
+		throw new UnsupportedOperationException();
+	}
 }
