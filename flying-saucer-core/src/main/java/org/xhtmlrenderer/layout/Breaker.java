@@ -67,6 +67,8 @@ public class Breaker {
             LineBreakContext context, int avail, CalculatedStyle style) {
         FSFont font = style.getFSFont(c);
         IdentValue whitespace = style.getWhitespace();
+        IdentValue wordwrap = style.getWordWrap();
+        boolean breakWord = (wordwrap == IdentValue.BREAK_WORD);
 
         // ====== handle nowrap
         if (whitespace == IdentValue.NOWRAP) {
@@ -101,7 +103,7 @@ public class Breaker {
         }
 
         context.setEndsOnNL(false);
-        doBreakText(c, context, avail, style, false);
+        doBreakText(c, context, avail, style, breakWord);
     }
 
     private static void doBreakText(LayoutContext c,
@@ -175,10 +177,9 @@ public class Breaker {
     }
 
 	public static BreakIterator getWordStream(String s) {
-		BreakIterator i = BreakIterator.getLineInstance();
+		BreakIterator i = BreakIterator.getWordInstance();
 		i.setText(s);
 		return i;
 	}
 
 }
-
