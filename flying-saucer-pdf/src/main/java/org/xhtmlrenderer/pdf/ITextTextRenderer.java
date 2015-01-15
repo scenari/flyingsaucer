@@ -51,8 +51,8 @@ public class ITextTextRenderer implements TextRenderer {
 		BaseFont bf = descr.getFont();
 		float size = font.getSize2D();
 		ITextFSFontMetrics result = new ITextFSFontMetrics();
-		result.setAscent(bf.getFontDescriptor(BaseFont.ASCENT, size));
-		result.setDescent(-bf.getFontDescriptor(BaseFont.DESCENT, size));
+		result.setAscent(bf.getFontDescriptor(BaseFont.BBOXURY, size));
+		result.setDescent(-bf.getFontDescriptor(BaseFont.BBOXLLY, size));
 
 		result.setStrikethroughOffset(-descr.getYStrikeoutPosition() / 1000f * size);
 		if (descr.getYStrikeoutSize() != 0) {
