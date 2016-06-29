@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.extend.ContentFunction;
@@ -147,7 +148,13 @@ public class ContentFunctionFactory {
         }
 
         public String calculate(RenderingContext c, FSFunction function, InlineText text) {
-            String uri = text.getParent().getElement().getAttribute("href");
+        	Box parent = text.getParent();
+        	Element parentElt = parent.getElement();
+        	while (parentElt == null) {
+        		parent = parent.getParent();
+        		parentElt = parent.getElement();
+        	}
+            String uri = parentElt.getAttribute("href");
             if (uri != null && uri.startsWith("#")) {
                 String anchor = uri.substring(1);
                 Box target = c.getBoxById(anchor);
