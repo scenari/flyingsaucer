@@ -312,8 +312,10 @@ public class Layer {
     
             BoxCollector collector = new BoxCollector();
             collector.collect(c, c.getOutputDevice().getClip(), this, blocks, lines, rangeLists);
+            
+            boolean intersects = blocks.size() > 0 || lines.size() > 0 || getMaster().intersects(c, c.getOutputDevice().getClip());
     
-            if (! isInline()) {
+            if (! isInline() && intersects) {
                 paintLayerBackgroundAndBorder(c);
                 if (c.debugDrawBoxes()) {
                     ((BlockBox)getMaster()).paintDebugOutline(c);
