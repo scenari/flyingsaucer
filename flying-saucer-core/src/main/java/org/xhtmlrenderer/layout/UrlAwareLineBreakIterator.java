@@ -2,6 +2,10 @@ package org.xhtmlrenderer.layout;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
+import java.text.spi.BreakIteratorProvider;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.ServiceLoader;
 
 
 /**
@@ -12,11 +16,23 @@ public class UrlAwareLineBreakIterator extends BreakIterator {
 
     private static final String BREAKING_CHARS = ".,:;!?- \n\r\t/";
 
-    private BreakIterator delegate = BreakIterator.getLineInstance();
+    private BreakIterator delegate;
     private String text;
     private Range currentRange;
 
-
+    public UrlAwareLineBreakIterator() {
+    	ServiceLoader<BreakIteratorProvider> loader = ServiceLoader.load(BreakIteratorProvider.class);
+    	Iterator<BreakIteratorProvider> iterator = loader.iterator();
+    	if (iterator.hasNext()) {
+    		BreakIteratorProvider provider = iterator.next();
+    		delegate = provider.getLineInstance(Locale.getDefault());
+    	} else {
+    		delegate = BreakIterator.getLineInstance(Locale.getDefault());
+    	}
+    	
+	}
+    
+    
     public int preceding(int offset) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
