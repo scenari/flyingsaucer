@@ -16,20 +16,24 @@ public class UrlAwareLineBreakIterator extends BreakIterator {
 
     private static final String BREAKING_CHARS = ".,:;!?- \n\r\t/";
 
+    static BreakIteratorProvider delegateProvider = null;
+    static {
+    	ServiceLoader<BreakIteratorProvider> loader = ServiceLoader.load(BreakIteratorProvider.class);
+    	Iterator<BreakIteratorProvider> iterator = loader.iterator();
+    	if (iterator.hasNext()) {
+    		delegateProvider = iterator.next();
+    	}
+    }
     private BreakIterator delegate;
     private String text;
     private Range currentRange;
 
     public UrlAwareLineBreakIterator() {
-    	ServiceLoader<BreakIteratorProvider> loader = ServiceLoader.load(BreakIteratorProvider.class);
-    	Iterator<BreakIteratorProvider> iterator = loader.iterator();
-    	if (iterator.hasNext()) {
-    		BreakIteratorProvider provider = iterator.next();
-    		delegate = provider.getLineInstance(Locale.getDefault());
+    	if (delegateProvider != null) {
+    		delegate = delegateProvider.getLineInstance(Locale.getDefault());
     	} else {
     		delegate = BreakIterator.getLineInstance(Locale.getDefault());
     	}
-    	
 	}
     
     
