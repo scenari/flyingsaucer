@@ -67,8 +67,8 @@ import com.lowagie.text.pdf.PdfWriter;
 public class ITextRenderer {
     // These two defaults combine to produce an effective resolution of 96 px to
     // the inch
-    private static final float DEFAULT_DOTS_PER_POINT = 20f * 4f / 3f;
-    private static final int DEFAULT_DOTS_PER_PIXEL = 20;
+    public static final float DEFAULT_DOTS_PER_POINT = 20f * 4f / 3f;
+    public static final int DEFAULT_DOTS_PER_PIXEL = 20;
 
     private final SharedContext _sharedContext;
     private final ITextOutputDevice _outputDevice;
@@ -92,7 +92,9 @@ public class ITextRenderer {
     private final char[] validPdfVersions = new char[] { PdfWriter.VERSION_1_2, PdfWriter.VERSION_1_3, PdfWriter.VERSION_1_4,
             PdfWriter.VERSION_1_5, PdfWriter.VERSION_1_6, PdfWriter.VERSION_1_7 };
 
-    private PDFCreationListener _listener;
+    private Integer _pdfXConformance;
+
+	private PDFCreationListener _listener;
 
     private boolean _timeouted;
 
@@ -210,6 +212,15 @@ public class ITextRenderer {
     public char getPDFVersion() {
         return _pdfVersion == null ? '0' : _pdfVersion.charValue();
     }
+	
+	public void setPDFXConformance(int pdfXConformance){
+		_pdfXConformance = new Integer(pdfXConformance);
+	}
+	
+	public int getPDFXConformance(){
+        return _pdfXConformance == null ? '0' : _pdfXConformance.intValue();
+	}
+
 
     public void layout() {
         LayoutContext c = newLayoutContext();
@@ -304,6 +315,11 @@ public class ITextRenderer {
         if (_pdfVersion != null) {
             writer.setPdfVersion(_pdfVersion.charValue());
         }
+		
+		if (_pdfXConformance != null) {
+			writer.setPDFXConformance(_pdfXConformance.intValue());
+		}
+
         if (_pdfEncryption != null) {
             writer.setEncryption(_pdfEncryption.getUserPassword(), _pdfEncryption.getOwnerPassword(),
                     _pdfEncryption.getAllowedPrivileges(), _pdfEncryption.getEncryptionType());

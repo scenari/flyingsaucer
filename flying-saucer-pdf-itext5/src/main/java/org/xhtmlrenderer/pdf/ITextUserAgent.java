@@ -24,12 +24,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.swing.NaiveUserAgent;
+import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.ContentTypeDetectingInputStreamWrapper;
 import org.xhtmlrenderer.util.XRLog;
 
@@ -47,8 +47,8 @@ public class ITextUserAgent extends NaiveUserAgent {
     private final ITextOutputDevice _outputDevice;
 
     public ITextUserAgent(ITextOutputDevice outputDevice) {
-		super(IMAGE_CACHE_CAPACITY);
-		_outputDevice = outputDevice;
+        super(Configuration.valueAsInt("xr.image.cache-capacity", IMAGE_CACHE_CAPACITY));
+        _outputDevice = outputDevice;
     }
 
     private byte[] readStream(InputStream is) throws IOException {
@@ -63,13 +63,17 @@ public class ITextUserAgent extends NaiveUserAgent {
     }
 
     public ImageResource getImageResource(String uriStr) {
-        ImageResource resource = null;
-        if (ImageUtil.isEmbeddedBase64Image(uriStr)) {
-            resource = loadEmbeddedBase64ImageResource(uriStr);
-        } else {
+        ImageResource resource;
+        if (!ImageUtil.isEmbeddedBase64Image(uriStr)) {
             uriStr = resolveURI(uriStr);
-            resource = (ImageResource) _imageCache.get(uriStr);
-            if (resource == null) {
+        }
+        resource = (ImageResource) _imageCache.get(uriStr);
+
+        if (resource == null) {
+            if (ImageUtil.isEmbeddedBase64Image(uriStr)) {
+                resource = loadEmbeddedBase64ImageResource(uriStr);
+                _imageCache.put(uriStr, resource);
+            } else {
                 InputStream is = resolveAndOpenStream(uriStr);
                 if (is != null) {
                     try {
@@ -79,7 +83,7 @@ public class ITextUserAgent extends NaiveUserAgent {
                             URI uri = new URI(uriStr);
                             PdfReader reader = _outputDevice.getReader(uri);
                             PDFAsImage image = new PDFAsImage(uri);
-                            Rectangle rect = reader.getPageSizeWithRotation(1);
+                            Rectangle rect = reader.getPageSizeWithRotation(PDFAsImage.pageNumberFromURI(uri));
                             image.setInitialWidth(rect.getWidth() * _outputDevice.getDotsPerPoint());
                             image.setInitialHeight(rect.getHeight() * _outputDevice.getDotsPerPoint());
                             resource = new ImageResource(uriStr, image);
@@ -100,16 +104,15 @@ public class ITextUserAgent extends NaiveUserAgent {
                     }
                 }
             }
-
-            if (resource != null) {
-                FSImage image=resource.getImage();
-                if (image instanceof ITextFSImage) {
-                    image=(FSImage) ((ITextFSImage) resource.getImage()).clone();
-                }
-                resource = new ImageResource(resource.getImageUri(), image);
-            } else {
-                resource = new ImageResource(uriStr, null);
+        }
+        if (resource != null) {
+            FSImage image = resource.getImage();
+            if (image instanceof ITextFSImage) {
+                image = (FSImage) ((ITextFSImage) resource.getImage()).clone();
             }
+            resource = new ImageResource(resource.getImageUri(), image);
+        } else {
+            resource = new ImageResource(uriStr, null);
         }
         return resource;
     }
