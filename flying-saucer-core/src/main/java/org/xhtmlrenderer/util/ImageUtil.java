@@ -29,7 +29,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
-import javax.xml.bind.DatatypeConverter;
+
+import org.xhtmlrenderer.protocols.data.DataURLConnection;
 
 /**
  * Static utility methods for working with images. Meant to suggest "best practices" for the most straightforward
@@ -290,7 +291,7 @@ public class ImageUtil {
         int b64Index = imageDataUri.indexOf("base64,");
         if (b64Index != -1) {
             String b64encoded = imageDataUri.substring(b64Index + "base64,".length());
-            return DatatypeConverter.parseBase64Binary(b64encoded);
+            return DataURLConnection.Base64.decode(b64encoded);
         } else {
             XRLog.load(Level.SEVERE, "Embedded XHTML images must be encoded in base 64.");
         }
